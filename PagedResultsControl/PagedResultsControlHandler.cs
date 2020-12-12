@@ -69,14 +69,14 @@ namespace PagedResultsControl
             return true;
         }
         
-        private static void ApplyPagedResultsControl([NotNull] LdapConnection connection, int pageSize, [CanBeNull] sbyte[] cookie)
+        private static void ApplyPagedResultsControl([NotNull] LdapConnection connection, int pageSize, [CanBeNull] byte[] cookie)
         {
             if (connection == null) throw new ArgumentNullException(nameof(connection));
 
             var ldapPagedControl = new LdapPagedResultsControl(pageSize, cookie);
             var searchConstraints = connection.SearchConstraints;
             searchConstraints.BatchSize = 0;
-            searchConstraints.setControls(ldapPagedControl);
+            searchConstraints.SetControls(ldapPagedControl);
             connection.Constraints = searchConstraints;
         }
         
@@ -89,18 +89,18 @@ namespace PagedResultsControl
             var searchResults = ldapConnection.Search
             (
                 options.SearchBase,
-                LdapConnection.SCOPE_SUB,
+                LdapConnection.ScopeSub,
                 options.Filter,
                 options.TargetAttributes,
                 false,
                 (LdapSearchConstraints) null
             );
 
-            while (searchResults.hasMore())
+            while (searchResults.HasMore())
             {
                 try
                 {
-                    var nextEntry = searchResults.next();
+                    var nextEntry = searchResults.Next();
                     var mappedEntry = _converter.Invoke(nextEntry);
                     mappedPageResults.Add(mappedEntry);
                 }
@@ -112,7 +112,7 @@ namespace PagedResultsControl
                 }
             }
 
-            responseControls = searchResults.ResponseControls;
+            responseControls = ((LdapSearchResults) searchResults).ResponseControls;
             return mappedPageResults;
         }
     }

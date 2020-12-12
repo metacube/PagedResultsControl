@@ -9,14 +9,14 @@ namespace PagedResultsControl
         // ToDo: for testing reasons only. Should be removed for later usage.
         public static readonly IntegrationOptions DefaultIntegrationOptions = new IntegrationOptions
         (
-            "192.168.1.199",
-            LdapConnection.DEFAULT_PORT,
-            "aura\\administrator",
-            "1qaz2WSX",
-            "dc=aura,dc=local",
-            "(&(objectCategory=person)(objectClass=user))",
-            LdapConnection.Ldap_V3,
-            10,
+            "192.168.1.208",
+            LdapConnection.DefaultPort,
+            "yulyankin@its",
+            "123QWEasd",
+            "CN=users, DC=its, DC=local",
+            "(&(memberof=CN=ITS Developers,CN=Users,DC=its,DC=local))",
+            LdapConnection.LdapV3,
+            5,
             new[] {"sAMAccountName", "givenName", "sn", "initials", "department"}
         );
 

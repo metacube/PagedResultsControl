@@ -19,7 +19,7 @@ namespace PagedResultsControl
         {
             try
             {
-                register(RequestOid, typeof(LdapPagedResultsControl));
+                Register(RequestOid, typeof(LdapPagedResultsControl));
             }
             catch (Exception ex)
             {
@@ -27,31 +27,31 @@ namespace PagedResultsControl
             }
         }
 
-        public LdapPagedResultsControl(int size, [CanBeNull] sbyte[] cookie) : base(RequestOid, true, null)
+        public LdapPagedResultsControl(int size, [CanBeNull] byte[] cookie) : base(RequestOid, true, null)
         {
             Size = size;
             Cookie = cookie ?? GetEmptyCookie;
             BuildTypedPagedRequest();
             // ReSharper disable once VirtualMemberCallInConstructor
-            setValue(_request.getEncoding(new LBEREncoder()));
+            SetValue(_request.GetEncoding(new LberEncoder()));
         }
         
         [CLSCompliant(false), UsedImplicitly]
-        public LdapPagedResultsControl(string oid, bool critical, sbyte[] values) : base(oid, critical, values)
+        public LdapPagedResultsControl(string oid, bool critical, byte[] values) : base(oid, critical, values)
         {
-            var lberDecoder = new LBERDecoder();
-            if (lberDecoder == null) throw new InvalidOperationException($"Failed to build {nameof(LBERDecoder)}");
+            var lberDecoder = new LberDecoder();
+            if (lberDecoder == null) throw new InvalidOperationException($"Failed to build {nameof(LberDecoder)}");
             
-            var asn1Object = lberDecoder.decode(values);
+            var asn1Object = lberDecoder.Decode(values);
             if (!(asn1Object is Asn1Sequence)) throw new InvalidCastException(DecodedNotSequence);
             
             var size = ((Asn1Structured) asn1Object).get_Renamed(0);
             if (!(size is Asn1Integer integerSize)) throw new InvalidOperationException(DecodedNotInteger);
-            Size = integerSize.intValue();
+            Size = integerSize.IntValue();
             
             var cookie = ((Asn1Structured) asn1Object).get_Renamed(1);
             if (!(cookie is Asn1OctetString octetCookie)) throw new InvalidOperationException(DecodedNotOctetString);
-            Cookie = octetCookie.byteValue();
+            Cookie = octetCookie.ByteValue();
         }
 
         /// <summary>
@@ -80,17 +80,17 @@ namespace PagedResultsControl
         /// to return, to an octet string of the server’s choosing,used to resume
         /// the search.
         /// </summary>
-        public sbyte[] Cookie { get; }
+        public byte[] Cookie { get; }
 
         public bool IsEmptyCookie() => Cookie == null || Cookie.Length == 0;
 
-        public static sbyte[] GetEmptyCookie => new sbyte[] {};
+        public static byte[] GetEmptyCookie => new byte[] {};
 
         private void BuildTypedPagedRequest()
         {
             _request = new Asn1Sequence(2);
-            _request.add(new Asn1Integer(Size));
-            _request.add(new Asn1OctetString(Cookie));
+            _request.Add(new Asn1Integer(Size));
+            _request.Add(new Asn1OctetString(Cookie));
         }
     }
 }

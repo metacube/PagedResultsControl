@@ -21,14 +21,14 @@ namespace PagedResultsControl
 			File.WriteAllText(outputFilePath, JsonConvert.SerializeObject(employees));
 			Debug.WriteLine($"Results serialized to <{outputFilePath}>");
 		}
-		
+
 		// Replace this method with custom entity mapper.
 		private static Employee ToEmployee([NotNull] LdapEntry entry)
 		{
 			if (entry == null) throw new ArgumentNullException(nameof(entry));
-			
+
 			var employee = new Employee();
-			var attributes = entry.getAttributeSet();
+			var attributes = entry.GetAttributeSet();
 			foreach (LdapAttribute attribute in attributes)
 			{
 				if (attribute.Name == "sAMAccountName") employee.Login = attribute.StringValue;
