@@ -1,3 +1,5 @@
+# UPDATE: changes merged into https://github.com/dsbenghe/Novell.Directory.Ldap.NETStandard, repository is frozen.
+
 # PagedResultsControl
 LDAP Control Extension for Simple Paged Results Manipulation (RFC 2629) support for Novell.Directory.Ldap.NETStandard
 
